@@ -19,3 +19,26 @@ const galeryMarkup = galleryItems
   .join("");
 
 gallery.insertAdjacentHTML("afterbegin", galeryMarkup);
+
+gallery.addEventListener("click", (event) => {
+  event.preventDefault();
+  const instance = basicLightbox.create(
+    `<img src="${getOriginalImgUrl(event)}">`
+  );
+
+  instance.show(() => document.addEventListener("keydown", onEscape));
+
+  const onEscape = (event) => {
+    if (event.code === "Escape") {
+      instance.close(() => document.removeEventListener("keydown", onEscape));
+    }
+  };
+});
+
+function getOriginalImgUrl(event) {
+  let originalImgUrl = "";
+  if (event.target.nodeName === "IMG") {
+    originalImgUrl = event.target.dataset.source;
+  }
+  return originalImgUrl;
+}
