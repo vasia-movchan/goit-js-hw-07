@@ -24,20 +24,22 @@ gallery.addEventListener("click", (event) => {
   event.preventDefault();
 
   const instance = basicLightbox.create(
-    `<img src="${getOriginalImgUrl(event)}">`
+    `<img src="${getOriginalImgUrl(event)}">`,
+    {
+      onShow: () => document.addEventListener("keydown", onEscape),
+      onClose: () => document.removeEventListener("keydown", onEscape),
+    }
   );
 
   if (event.target.nodeName === "IMG") {
-    instance.show(() => document.addEventListener("keydown", onEscape));
+    instance.show();
   }
 
-  //
-
-  const onEscape = (event) => {
+  function onEscape(event) {
     if (event.code === "Escape") {
-      instance.close(() => document.removeEventListener("keydown", onEscape));
+      instance.close();
     }
-  };
+  }
 });
 
 function getOriginalImgUrl(event) {
